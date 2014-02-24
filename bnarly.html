@@ -7,15 +7,15 @@
 				height: 300px;
 			};
 		</style>
-	
+
 		<script src="jquery.min.js" type="text/javascript"></script>
 		<script src="bnarly.js" type="text/javascript"></script>
-		
+
 		<script>
 			function runCalc() {
 				bnarly.shell("calc.exe");
 			};
-			
+
 			function showWindbgBreakpoint() {
 				var bp = bnarly.getWindbgBreakpoint();
 				if(!bp) {
@@ -23,11 +23,11 @@
 				}
 				$("#windbg_breakpoint").text(bp);
 			};
-			
+
 			function showSupportedBrowsers() {
 				$("#windbg_breakpoint").text("SUPPORTED BROWSERS:");
 			};
-			
+
 			var childWindow = window;
 			childWindow.opener = window;
 			var currSlide = null;
@@ -144,18 +144,18 @@
 			}
 
 			function createDataTable(memDump) {
-				var table = $("<table><tr><th>addr</th><th>val</th></tr></table>");
+				var table = $("<table><tr><th>offset</th><th>addr</th><th>val</th></tr></table>");
 				table.addClass("memory-table");
 				for(var i = 0; i < memDump.length; i++) {
 					var info = memDump[i];
-					var row = $("<tr><td>"+memLink(info.addr, hex(info.addr))+"</td><td>"+info.val+"</td></tr>");
+					var row = $("<tr><td>"+hex(i*4)+": </td><td>"+memLink(info.addr, hex(info.addr))+"</td><td>"+info.val+"</td></tr>");
 					table.append(row);
 				}
 				return table;
 			}
 
 			function createMemoryTable(memDump) {
-				var table = $("<table><tr><th>addr</th><th>val</th><th>symbol/*pointer</th></tr></table>");
+				var table = $("<table><tr><th>offset</th><th>addr</th><th>val</th><th>symbol/*pointer</th></tr></table>");
 				table.addClass("memory-table");
 				for(var i = 0; i < memDump.length; i++) {
 					var info = memDump[i];
@@ -164,7 +164,7 @@
 						valText = memLink(info.val, valText);
 						//valText = "<a href='#action=memory&addr=" + info.val + "' class='memory-link' addr='" + info.val + "'>" + valText + "</a>";
 					}
-					var row = $("<tr><td>"+memLink(info.addr, hex(info.addr))+"</td><td>"+valText+"</td><td>"+info.symbol+"</td></tr>");
+					var row = $("<tr><td>"+hex(i*4)+": </td><td>"+memLink(info.addr, hex(info.addr))+"</td><td>"+valText+"</td><td>"+info.symbol+"</td></tr>");
 					table.append(row);
 				}
 				return table;
@@ -380,7 +380,7 @@
 
 				$(".browser-info").text(bnarly.getBrowserName() + " " + bnarly.getBrowserVersion());
 				var symServs = bnarly.getSymbolServerLocations();
-				var breakpoint = bnarly.getWindbgBreakpoint();		
+				var breakpoint = bnarly.getWindbgBreakpoint();
 
 				var symServArray = [];
 				for(var i = 0; i < symServs.length; i++) {
@@ -389,7 +389,7 @@
 				var symServ = ".sympath " + symServArray.join(";");
 
 				$(".browser-breakpoints").text(
-					symServ + "\r\n\r\n" + 
+					symServ + "\r\n\r\n" +
 					bnarly.getWindbgBreakpoint() + "\r\n\r\n" +
 					".suspend_ui 0"
 				);
@@ -517,7 +517,7 @@
 			}
 		</style>
 	</head>
-	
+
 	<body>
 		<div class="main-content">
 			<div class="intro-slides">
@@ -594,12 +594,12 @@
 									<h2>Inspect</h2>
 									Evaluate the entered javascript below and display the result of the last statement in memory.
 									<br />
-									
+
 									<textarea style="width:350px" cols="90" rows="5" id="inspect-textarea">var i = new Image();
 i.src = "hello - can you find this string?";
 i</textarea>
 									<br />
-									
+
 									If the object's size cannot be determined, dump this many bytes:
 									<input type="text" id="inspect-fallback-size" value="0x40"></inspect>
 									<br />
@@ -614,7 +614,7 @@ i</textarea>
 									<input type="button" id="inspect-button" value="INSPECT IT"></input>
 									<br />
 									<br />
-									
+
 									<div id="inspect-heap-tracking-container" style="display:none">
 										<h3>Heap Tracking</h3>
 
